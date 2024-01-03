@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btn_incoming_call"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="수신 전화"
+        android:layout_marginTop="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_ongoing_call" />
+
+    <Button
+        android:id="@+id/btn_ongoing_call"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="진행 중인 통화"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_incoming_call"
+        app:layout_constraintBottom_toTopOf="@+id/btn_screening_call" />
+
+    <Button
+        android:id="@+id/btn_screening_call"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="통화 선택"
+        android:layout_marginBottom="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_ongoing_call"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
