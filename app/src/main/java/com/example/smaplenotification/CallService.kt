@@ -1,5 +1,7 @@
 package com.example.smaplenotification
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,96 +10,149 @@ import android.app.Person
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 
 @RequiresApi(Build.VERSION_CODES.P)
 class CallService : Service() {
 
-    private val CHANNEL_ID_1 = "1"
-    private val CHANNEL_ID_2 = "2"
-    private val CHANNEL_ID_3 = "3"
-
-    val intent = Intent(this, MainActivity::class.java)
-    val contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    val declineIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    val answerIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    val hangupIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    val incomingCaller = Person.Builder()
-        .setName("김종민")
-        .setImportant(true)
-        .build()
-    val notificationManager =
+    private val notificationManager by lazy {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
+    @SuppressLint("ForegroundServiceType")
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate() {
         super.onCreate()
 
 
+    }
+
+    fun startService(context: Context) {
+        val intent = Intent(context, CallService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
+
+    }
+
+    @SuppressLint("ForegroundServiceType")
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel1 = NotificationChannel(
-                CHANNEL_ID_1,
+                "1",
                 "Channel 1",
                 NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel1)
 
             val channel2 = NotificationChannel(
-                CHANNEL_ID_2,
+                "2",
                 "Channel 2",
                 NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel2)
 
             val channel3 = NotificationChannel(
-                CHANNEL_ID_3,
+                "3",
                 "Channel 3",
                 NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel3)
         }
-    }
+        // 알림 생성
+        val notification: Notification = Notification.Builder(this, "1")
+            .setSmallIcon(R.drawable.baseline_catching_pokemon_24) //알림 아이콘
+            .setContentTitle("뮤직 플레이어 앱") //알림의 제목 설정
+            .setContentText("앱이 실행 중입니다.") //알림의 내용 설정
+            .build()
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(1, notification) //인수로 알림 ID와 알림 지정
 
         return START_NOT_STICKY
     }
 
+    @SuppressLint("ForegroundServiceType")
     @RequiresApi(Build.VERSION_CODES.S)
-    fun notification1() {
-        val builder = Notification.Builder(this, "1")
-            .setContentIntent(contentIntent)
-            .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
-            .setStyle(
-                Notification.CallStyle.forIncomingCall(incomingCaller, declineIntent, answerIntent)
-            )
-            .addPerson(incomingCaller)
-        notificationManager.notify(1, builder.build())
+    fun notification1(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val declineIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val answerIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val incomingCaller = Person.Builder()
+            .setName("김종민")
+            .setImportant(true)
+            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val builder = Notification.Builder(context, "1")
+                .setContentIntent(contentIntent)
+                .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
+                .setStyle(
+                    Notification.CallStyle.forIncomingCall(incomingCaller, declineIntent, answerIntent)
+                )
+                .addPerson(incomingCaller)
+            with(NotificationManagerCompat.from(context)) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+                notify(1, builder.build())
+            }
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    fun notification2() {
-        val builder = Notification.Builder(this, "2")
-            .setContentIntent(contentIntent)
-            .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
-            .setStyle(
-                Notification.CallStyle.forOngoingCall(incomingCaller, hangupIntent))
-            .addPerson(incomingCaller)
-        notificationManager.notify(2, builder.build())
+    @SuppressLint("ForegroundServiceType")
+    fun notification2(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val hangupIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val incomingCaller = Person.Builder()
+            .setName("김종민")
+            .setImportant(true)
+            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val builder = Notification.Builder(context, "2")
+                .setContentIntent(contentIntent)
+                .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
+                .setStyle(
+                    Notification.CallStyle.forOngoingCall(incomingCaller, hangupIntent)
+                )
+                .addPerson(incomingCaller)
+            notificationManager.notify(2, builder.build())
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    fun notification3() {
-        val builder = Notification.Builder(this, "3")
-            .setContentIntent(contentIntent)
-            .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
-            .setStyle(
-                Notification.CallStyle.forScreeningCall(incomingCaller, hangupIntent, answerIntent))
-            .addPerson(incomingCaller)
-        notificationManager.notify(3, builder.build())
+    @SuppressLint("ForegroundServiceType")
+    fun notification3(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val answerIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val hangupIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val incomingCaller = Person.Builder()
+            .setName("김종민")
+            .setImportant(true)
+            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val builder = Notification.Builder(context, "3")
+                .setContentIntent(contentIntent)
+                .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
+                .setStyle(
+                    Notification.CallStyle.forScreeningCall(incomingCaller, hangupIntent, answerIntent))
+                .addPerson(incomingCaller)
+                .build()
+            startForeground(3, builder)
+        }
     }
 
 
