@@ -48,21 +48,21 @@ class CallService : Service() {
             val channel1 = NotificationChannel(
                 "1",
                 "Channel 1",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel1)
 
             val channel2 = NotificationChannel(
                 "2",
                 "Channel 2",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel2)
 
             val channel3 = NotificationChannel(
                 "3",
                 "Channel 3",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel3)
         }
@@ -164,7 +164,7 @@ class CallService : Service() {
                 ) {
                     return
                 }
-                notify(2, builder.build())
+                notify(1, builder.build())
             }
         }
     }
