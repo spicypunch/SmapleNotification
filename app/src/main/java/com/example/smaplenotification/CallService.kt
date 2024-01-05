@@ -29,8 +29,6 @@ class CallService : Service() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate() {
         super.onCreate()
-
-
     }
 
     fun startService(context: Context) {
@@ -50,21 +48,21 @@ class CallService : Service() {
             val channel1 = NotificationChannel(
                 "1",
                 "Channel 1",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(channel1)
 
             val channel2 = NotificationChannel(
                 "2",
                 "Channel 2",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(channel2)
 
             val channel3 = NotificationChannel(
                 "3",
                 "Channel 3",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(channel3)
         }
@@ -81,7 +79,6 @@ class CallService : Service() {
     }
 
     @SuppressLint("ForegroundServiceType")
-    @RequiresApi(Build.VERSION_CODES.S)
     fun notification1(context: Context) {
         val intent = Intent(context, MainActivity::class.java)
         val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -129,7 +126,16 @@ class CallService : Service() {
                     Notification.CallStyle.forOngoingCall(incomingCaller, hangupIntent)
                 )
                 .addPerson(incomingCaller)
-            notificationManager.notify(2, builder.build())
+            with(NotificationManagerCompat.from(context)) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+                notify(1, builder.build())
+            }
         }
     }
 
@@ -150,8 +156,16 @@ class CallService : Service() {
                 .setStyle(
                     Notification.CallStyle.forScreeningCall(incomingCaller, hangupIntent, answerIntent))
                 .addPerson(incomingCaller)
-                .build()
-            startForeground(3, builder)
+            with(NotificationManagerCompat.from(context)) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+                notify(2, builder.build())
+            }
         }
     }
 
