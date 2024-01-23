@@ -69,7 +69,7 @@ class CallService : Service() {
         // 알림 생성
         val notification: Notification = Notification.Builder(this, "1")
             .setSmallIcon(R.drawable.baseline_catching_pokemon_24) //알림 아이콘
-            .setContentTitle("뮤직 플레이어 앱") //알림의 제목 설정
+            .setContentTitle("Test") //알림의 제목 설정
             .setContentText("앱이 실행 중입니다.") //알림의 내용 설정
             .build()
 
