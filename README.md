@@ -1,2 +1,2 @@
-### 영상 통화 기능을 붙이기 전 알림 테스트
+### 영상 통화를 앱에 구현하기 전 통화 알림 Notification 테스트 용 앱
 참고: https://developer.android.com/develop/ui/views/notifications/call-style?hl=ko
