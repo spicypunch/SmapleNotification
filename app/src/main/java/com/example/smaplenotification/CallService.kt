@@ -13,7 +13,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
@@ -38,12 +37,10 @@ class CallService : Service() {
         } else {
             context.startService(intent)
         }
-
     }
 
     @SuppressLint("ForegroundServiceType")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel1 = NotificationChannel(
                 "1",
@@ -51,20 +48,6 @@ class CallService : Service() {
                 NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel1)
-
-            val channel2 = NotificationChannel(
-                "2",
-                "Channel 2",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notificationManager.createNotificationChannel(channel2)
-
-            val channel3 = NotificationChannel(
-                "3",
-                "Channel 3",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notificationManager.createNotificationChannel(channel3)
         }
         // 알림 생성
         val notification: Notification = Notification.Builder(this, "1")
@@ -119,7 +102,7 @@ class CallService : Service() {
             .setImportant(true)
             .build()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val builder = Notification.Builder(context, "2")
+            val builder = Notification.Builder(context, "1")
                 .setContentIntent(contentIntent)
                 .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
                 .setStyle(
@@ -150,7 +133,7 @@ class CallService : Service() {
             .setImportant(true)
             .build()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val builder = Notification.Builder(context, "3")
+            val builder = Notification.Builder(context, "1")
                 .setContentIntent(contentIntent)
                 .setSmallIcon(R.drawable.baseline_catching_pokemon_24)
                 .setStyle(

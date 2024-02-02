@@ -22,14 +22,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <service
             android:name=".CallService"
             android:foregroundServiceType="phoneCall"
-            tools:ignore="ForegroundServicePermission" />
+            android:exported="false" />
     </application>
 
 </manifest>
